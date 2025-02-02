@@ -1,0 +1,54 @@
+.game-of-life {
+    text-align: center;
+    margin: 20px;
+
+}
+
+.grid-container2 {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.grid2 {
+    display: grid;
+    grid-template-columns: repeat(10, 30px);
+    grid-template-rows: repeat(10, 30px);
+}
+
+.cell2 {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+.cell2.alive {
+    background-color: black;
+}
+
+.cell2.dead {
+    background-color: white;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+/* Ajout de la classe pour le fond rouge lorsque la simulation est en cours */
+button.stop {
+    background-color: red;
+}
+
+button.stop:hover {
+    background-color: darkred;
+}
