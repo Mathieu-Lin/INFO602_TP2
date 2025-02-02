@@ -3,20 +3,24 @@ import './Epidemic.css';
 import { Link } from "react-router-dom";
 
 const Epidemic = () => {
-    const [population, setPopulation] = useState(() => initializePopulation(1000));
+    const [population, setPopulation] = useState([]);
     const [isSimulating, setIsSimulating] = useState(false);
-    const [p1, setP1] = useState(0.5);
-    const [p2, setP2] = useState(0.5);
+    const [p1, setP1] = useState(0.5); // Taux de mortalité
+    const [p2, setP2] = useState(0.5); // Probabilité d'infection
+    const [immunityRate, setImmunityRate] = useState(0.3); // Taux d'immunisation initiale
     const [isMusicOn, setIsMusicOn] = useState(false);
     const audioRef = useRef(null);
 
     const gridSize = 30; // Taille de la grille (30x30)
 
-    function initializePopulation(size) {
+    // Fonction d'initialisation de la population avec le taux d'immunisation
+    function initializePopulation(size, p1, immunityRate) {
         let initial = Array(size).fill('Sain');
         initial[0] = 'Malade'; // On place une personne malade au départ
-        for (let i = 1; i < size * 0.3; i++) {
-            initial[i] = 'Immunisé'; // 30% de la population est immunisée
+
+        // Le taux d'immunisation détermine combien de personnes seront initialement immunisées
+        for (let i = 1; i < size * immunityRate; i++) {
+            initial[i] = 'Immunisé';
         }
 
         // Mélange aléatoire de la population
@@ -28,6 +32,9 @@ const Epidemic = () => {
         return initial;
     }
 
+    useEffect(() => {
+        setPopulation(initializePopulation(1000, p1, immunityRate)); // Initialise la population une fois p1 et immunityRate définis
+    }, [p1, immunityRate]); // Relance à chaque fois que p1 ou immunityRate change
 
     function getNeighbors(index) {
         const row = Math.floor(index / gridSize);
@@ -94,6 +101,11 @@ const Epidemic = () => {
                     <input type="number" min="0" max="1" step="0.01" value={p2}
                            onChange={(e) => setP2(Math.min(1, Math.max(0, parseFloat(e.target.value) || 0)))}/>
                 </label>
+                <label>
+                    Taux d'immunisation initiale:
+                    <input type="number" min="0" max="1" step="0.01" value={immunityRate}
+                           onChange={(e) => setImmunityRate(Math.min(1, Math.max(0, parseFloat(e.target.value) || 0)))}/>
+                </label>
             </div>
             <div className="grid3">
                 {population.map((state, index) => (
@@ -138,11 +150,10 @@ const Epidemic = () => {
                 >
                     {isMusicOn ? 'Musique Off' : 'Musique On'}
                 </button>
-                <button onClick={() => setPopulation(initializePopulation(1000))}>Réinitialiser</button>
+                <button onClick={() => setPopulation(initializePopulation(1000, p1, immunityRate))}>Réinitialiser</button>
             </div>
         </div>
     );
-
 };
 
 export default Epidemic;
